@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>My Calculator</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link rel='stylesheet' href='node_modules/bootstrap/dist/css/bootstrap.min.css'>
+    <link rel='stylesheet' href='style.css'>
+</head>
+<body>
+    <div class="container d-flex flex-column align-items-center justify-content-center">
+        <h4>Simple Calculator</h4>
+        <input type="text" id="num1" class="input form-control" placeholder="Enter the first number">
+        <input type="text" id="num2" class="input form-control" placeholder="Enter the second number">
+        <input type="text" id="result" class="input form-control" placeholder="The result">
+
+        <div class="btn-container btn-group-vertical" role="group">
+            <button type="button" id="add" class="btn btn-outline-primary" onclick="add()">Add</button>
+            <button type="button" id="subtract" class="btn btn-outline-success" onclick="subtract()">Subtract</button>
+            <button type="button" id="multiply" class="btn btn-outline-danger" onclick="multiply()">Multiply</button>
+            <button type="button" id="divide" class="btn btn-outline-warning" onclick="divide()">Divide</button>
+            <button type="button" id="reset" class="btn btn-dark" onclick="reset()">Reset</button>
+        </div>
+        
+    </div>
+    
+    <script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src='sprints.js'></script>
+</body>
+</html>
