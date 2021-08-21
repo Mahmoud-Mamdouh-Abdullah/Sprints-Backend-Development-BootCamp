@@ -2,33 +2,31 @@ const result = document.getElementById("result");
 const number1 = document.getElementById('num1');
 const number2 = document.getElementById('num2');
 
-function add() {
+const add = function() {
     makeOperation('+');
 }
 
-
-function subtract() {
+const subtract = function() {
     makeOperation('-');
 }
 
-function multiply() {
+const multiply = function() {
     makeOperation('*');
 }
 
-function divide() {
+const divide = function() {
     makeOperation('/');
 }
 
-function reset() {
+const reset = function() {
     number1.value = "";
     number2.value = "";
     result.value = "";
 }
 
-function makeOperation(operation) {
+const makeOperation = function(operation) {
     let num1 = parseInt(number1.value);
     let num2 = parseInt(number2.value);
-    console.log(`${num1} and ${num2}`)
     if(isValid(num1, num2)) {
         switch(operation) {
             case '+':
@@ -52,7 +50,7 @@ function makeOperation(operation) {
     }
 }
 
-function isValid(n1, n2) {
+const isValid = function(n1, n2) {
     if(Number.isInteger(n1) && Number.isInteger(n2)){
         return true;
     } else{
