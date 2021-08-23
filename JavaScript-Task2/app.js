@@ -10,8 +10,8 @@ const person = {
 
 const getName = function() {
     let personName = prompt("Enter your name please!");
-
-    while(personName.length <= 0 || personName == null) {
+    debugger;
+    while(personName.length <= 0) {
         personName = prompt("Enter your name please!");
     }
     
