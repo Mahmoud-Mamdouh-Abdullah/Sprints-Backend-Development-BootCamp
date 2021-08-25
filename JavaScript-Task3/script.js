@@ -1,4 +1,4 @@
-"use strict";
+//"use strict";
 let tasks = [];
 
 const getPriorityName = function (priority) {
@@ -33,27 +33,39 @@ const moveDown = function (i) {
   tasks[i + 1] = oldTask;
   renderTable();
 };
-const edit = function (editBtn, i) {
 
-    //console.log(tasks[i]);
+const viewSaveCancel = function(saveBtn, cancelBtn, editBtn) {
+    saveBtn.classList.remove('d-none')
+    cancelBtn.classList.remove('d-none')
+    editBtn.classList.add('d-none');
+}
+
+const hideSaveCancel = function(saveBtn, cancelBtn, editBtn) {
+  saveBtn.classList.add('d-none')
+  cancelBtn.classList.add('d-none')
+  editBtn.classList.remove('d-none');
+}
+
+
+const edit = function (editBtn, i) {
 
     let par = editBtn.parentElement;
     let saveBtn = par.querySelector('#save'+i);
-    saveBtn.classList.remove('d-none')
     let cancelBtn = par.querySelector('#cancel'+i);
-    cancelBtn.classList.remove('d-none')
-    editBtn.classList.add('d-none');
+
+    viewSaveCancel(saveBtn, cancelBtn, editBtn);
 
 
     let parOfPar = par.parentElement;
-    //console.log(parOfPar);
     let tds = parOfPar.querySelectorAll('td');
-    //console.log(tds);
+
     let taskNameElement = tds[1];
     taskNameElement.innerHTML =
      `<div class="col-md-6">
         <input type="text" id="task_name_edit" class="form-control" placeholder="Task name..." value="${tasks[i].name}" />
      </div>`;
+
+
     let priorityElement = tds[2];
     priorityElement.innerHTML = 
         `<div class="col-md-12">
@@ -71,7 +83,7 @@ const edit = function (editBtn, i) {
     saveBtn.addEventListener('click', function() {
         let taskName = taskNameElement.querySelector('#task_name_edit').value;
         let priority = priorityElement.querySelector("#task_priority_edit").value;
-        console.log(taskName);
+        console.log(taskNameElement.querySelector('#task_name_edit'));
         console.log(priority);
 
         taskNameElement.innerHTML = taskName;
@@ -79,16 +91,14 @@ const edit = function (editBtn, i) {
 
         tasks[i].name = taskName;
         tasks[i].priority = priority;
-        cancelBtn.classList.add('d-none');
-        saveBtn.classList.add('d-none');
-        editBtn.classList.remove('d-none');
+
+        hideSaveCancel(saveBtn, cancelBtn, editBtn);
 
     });
 
     cancelBtn.addEventListener('click', function () {
-        cancelBtn.classList.add('d-none');
-        saveBtn.classList.add('d-none');
-        editBtn.classList.remove('d-none');
+        hideSaveCancel(saveBtn, cancelBtn, editBtn);
+
         taskNameElement.innerText = tasks[i].name;
         priorityElement.innerText = getPriorityName(tasks[i].priority);
     });
