@@ -19,6 +19,8 @@
 - JavaScript
 - HTML
 
+---------------------------------------
+
 #### JavaScript-Task3
 - It is a TODO app that takes from the user the todo name and it's priority and list it in a table, after adding it the user can delete, edit, move up, and move down the todo note.
 
