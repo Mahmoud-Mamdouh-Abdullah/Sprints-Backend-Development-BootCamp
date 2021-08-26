@@ -34,78 +34,110 @@ const moveDown = function (i) {
   renderTable();
 };
 
-const viewSaveCancel = function(saveBtn, cancelBtn, editBtn) {
-    saveBtn.classList.remove('d-none')
-    cancelBtn.classList.remove('d-none')
-    editBtn.classList.add('d-none');
+// Task-3 Code Start
+
+const viewSaveCancel = function (saveBtn, cancelBtn, editBtn) {
+  saveBtn.classList.remove('d-none');
+  cancelBtn.classList.remove('d-none');
+  editBtn.classList.add('d-none');
 }
 
-const hideSaveCancel = function(saveBtn, cancelBtn, editBtn) {
-  saveBtn.classList.add('d-none')
-  cancelBtn.classList.add('d-none')
+const hideSaveCancel = function (saveBtn, cancelBtn, editBtn) {
+  saveBtn.classList.add('d-none');
+  cancelBtn.classList.add('d-none');
   editBtn.classList.remove('d-none');
 }
 
+const getWorkingValues = function (saveButton, i, cancelOrSave) {
+  let par = saveButton.parentElement;
+  let editBtn = par.querySelector('#edit' + i);
+
+  let cancelorSaveBtn;
+  if (cancelOrSave === 1)
+    cancelorSaveBtn = par.querySelector('#cancel' + i);
+  else
+    cancelorSaveBtn = par.querySelector('#save' + i);
+
+  let parOfPar = par.parentElement;
+  let tds = parOfPar.querySelectorAll('td');
+
+  let taskNameElement = tds[1];
+  let priorityElement = tds[2];
+
+  return [editBtn, cancelorSaveBtn, taskNameElement, priorityElement];
+}
+
+const save = function (saveBtn, i) {
+  const workingValues = getWorkingValues(saveBtn, i, 1);
+
+  let editBtn = workingValues[0];
+  let cancelBtn = workingValues[1];
+  let taskNameElement = workingValues[2];
+  let priorityElement = workingValues[3];
+
+  let taskName = taskNameElement.querySelector('#taskNameEdit').value;
+  let priority = priorityElement.querySelector("#taskPriorityEdit").value;
+
+  taskNameElement.innerHTML = taskName;
+  priorityElement.innerHTML = getPriorityName(priority);
+
+  tasks[i].name = taskName;
+  tasks[i].priority = priority;
+
+  hideSaveCancel(saveBtn, cancelBtn, editBtn);
+
+}
+
+const cancel = function (cancelBtn, i) {
+
+  const workingValues = getWorkingValues(cancelBtn, i, 2);
+
+  let editBtn = workingValues[0];
+  let saveBtn = workingValues[1];
+  let taskNameElement = workingValues[2];
+  let priorityElement = workingValues[3];
+
+  hideSaveCancel(saveBtn, cancelBtn, editBtn);
+
+  taskNameElement.innerText = tasks[i].name;
+  priorityElement.innerText = getPriorityName(tasks[i].priority);
+}
 
 const edit = function (editBtn, i) {
 
-    let par = editBtn.parentElement;
-    let saveBtn = par.querySelector('#save'+i);
-    let cancelBtn = par.querySelector('#cancel'+i);
+  let par = editBtn.parentElement;
+  let saveBtn = par.querySelector('#save' + i);
+  let cancelBtn = par.querySelector('#cancel' + i);
 
-    viewSaveCancel(saveBtn, cancelBtn, editBtn);
+  viewSaveCancel(saveBtn, cancelBtn, editBtn);
 
 
-    let parOfPar = par.parentElement;
-    let tds = parOfPar.querySelectorAll('td');
+  let parOfPar = par.parentElement;
+  let tds = parOfPar.querySelectorAll('td');
 
-    let taskNameElement = tds[1];
-    taskNameElement.innerHTML =
-     `<div class="col-md-6">
-        <input type="text" id="task_name_edit" class="form-control" placeholder="Task name..." value="${tasks[i].name}" />
+  let taskNameElement = tds[1];
+  taskNameElement.innerHTML =
+    `<div class="col-md-6">
+        <input type="text" id="taskNameEdit" class="form-control" placeholder="Task name..." value="${tasks[i].name}" />
      </div>`;
 
 
-    let priorityElement = tds[2];
-    priorityElement.innerHTML = 
-        `<div class="col-md-12">
-        <select id="task_priority_edit" class="form-control" >
+  let priorityElement = tds[2];
+  priorityElement.innerHTML =
+    `<div class="col-md-12">
+        <select id="taskPriorityEdit" class="form-control" >
             <option value="1">High</option>
             <option value="2">Medium</option>
             <option value="3">Low</option>
         </select>
     </div>`;
-    priorityElement.querySelector('#task_priority_edit').value = tasks[i].priority;
+  priorityElement.querySelector('#taskPriorityEdit').value = tasks[i].priority;
 
-    console.log(taskNameElement);
-    console.log(priorityElement);
-
-    saveBtn.addEventListener('click', function() {
-        let taskName = taskNameElement.querySelector('#task_name_edit').value;
-        let priority = priorityElement.querySelector("#task_priority_edit").value;
-        console.log(taskNameElement.querySelector('#task_name_edit'));
-        console.log(priority);
-
-        taskNameElement.innerHTML = taskName;
-        priorityElement.innerHTML = getPriorityName(priority);
-
-        tasks[i].name = taskName;
-        tasks[i].priority = priority;
-
-        hideSaveCancel(saveBtn, cancelBtn, editBtn);
-
-    });
-
-    cancelBtn.addEventListener('click', function () {
-        hideSaveCancel(saveBtn, cancelBtn, editBtn);
-
-        taskNameElement.innerText = tasks[i].name;
-        priorityElement.innerText = getPriorityName(tasks[i].priority);
-    });
-
-    console.log(tasks);
+  console.log(tasks);
 
 }
+
+// Task-3 Code End
 
 
 
@@ -119,21 +151,19 @@ const renderTable = function () {
         <td>${t.name}</td>
         <td>${getPriorityName(t.priority)}</td>
         <td>
-        ${
-          i > 0
-            ? `<button class="btn btn-sm btn-secondary" onclick="moveUp(${i})">Up</button>`
-            : ``
-        }
-        ${
-          i < tasks.length - 1
-            ? `<button class="btn btn-sm btn-secondary" onclick="moveDown(${i})">Down</button>`
-            : ``
-        }
+        ${i > 0
+        ? `<button class="btn btn-sm btn-secondary" onclick="moveUp(${i})">Up</button>`
+        : ``
+      }
+        ${i < tasks.length - 1
+        ? `<button class="btn btn-sm btn-secondary" onclick="moveDown(${i})">Down</button>`
+        : ``
+      }
         </td>
         <td>
         <button class="btn btn-primary btn-sm" id="edit${i}" onclick="edit(edit${i},${i})">Edit</button>
-        <button class="btn btn-success btn-sm d-none" id="save${i}">Save</button>
-        <button class="btn btn-danger btn-sm d-none" id="cancel${i}">Cancel</button>
+        <button class="btn btn-success btn-sm d-none" id="save${i}" onclick="save(save${i},${i})">Save</button>
+        <button class="btn btn-danger btn-sm d-none" id="cancel${i}" onclick="cancel(cancel${i},${i})">Cancel</button>
         <button class="btn btn-danger btn-sm" onclick="deleteTask(${i})">Delete</button></td>
         </tr>
         `;
