@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat App</title>
+    <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Fira+Sans:ital,wght@1,900&display=swap');
+    </style>
+</head>
+
+<body class="bg-dark">
+
+    <header class="py-1 px-3 bg-dark text-white">
+        <nav class="navbar border-bottom">
+            <div class="col-md-4 d-flex align-items-center">
+                <a href="#" class="mb-3 me-2 mb-md-0 text-muted text-decoration-none lh-1">
+                    <img src="img/chat-app-icon-0.jpg" id="logo" width="40px" height="40px">
+                </a>
+                <span id="navbarName">Chat App</span>
+            </div>
+        </nav>
+    </header>
+
+    <main class="bg-dark">
+        <section class="mainContainer" id="loginSec">
+            <div class="text-center">
+                <img src="img/chat-app-icon-0.jpg" alt="icon" width="150px" height="150px">
+                <p class="text-white text-center" id="appName">Chat App</p>
+                <div class="d-flex flex-column justify-content-center inputContainer align-items-center">
+
+                    <input type="text" placeholder="Type Group Name" class="form-control mb-3 myInput" id="groupName">
+                    <input type="text" placeholder="Type Your Name" class="form-control mb-3 myInput" id="MyName">
+                    <button type="button" class="btn btn-primary myInput" id="joinGroup" onclick="joinGroup()">Join
+                        Gruop</button>
+                </div>
+            </div>
+        </section>
+
+        <section id="chatSec" class="d-flex flex-column align-items-center d-none">
+            <img src="img/chat-app-icon-0.jpg" alt="icon" width="150px" height="150px">
+            <p class="text-white text-center" id="appName">Chat App</p>
+            <div class="chatContainer border p-2">
+                <div class="d-flex flex-row justify-content-between mb-3">
+                    <div class="text-white d-flex flex-row">
+                        <p class="chatP">Group Name</p>
+                        <p class="chatP">&nbsp : &nbsp Online Users</p>
+                        <p class="chatP">&nbsp(4)</p>
+                    </div>
+                    <button type="button" class="btn btn-danger" id="logout" onclick="logout()">Logout</button>
+                </div>
+
+                <div class="msgDiv border text-white text-center mb-3 p-3">
+                    <div class="msgBody d-flex flex-row justify-content-start mb-3">
+                        <div class="msgContent border d-flex flex-row p-2 justify-content-between">
+                            <p>User 1 : &nbsp Hello I am Mahmoud Mamdouh </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sendDiv text-white text-center">
+                    <div class="d-flex flex-row justify-content-between">
+                        <textarea class="form-control m-1" rows="3" placeholder="Enter your message here..." onkeyup="sendMsg()"></textarea>
+                        <button type="button" class="btn btn-success m-1" id="sendMsg" onclick="sendMsg()">Send Message</button>
+                    </div>
+                    <p>You will logout after 21 sec</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="script.js"></script>
+
+</body>
+
+</html>
