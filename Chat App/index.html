@@ -35,7 +35,7 @@
 
                     <input type="text" placeholder="Type Group Name" class="form-control mb-3 myInput" id="groupName">
                     <input type="text" placeholder="Type Your Name" class="form-control mb-3 myInput" id="MyName">
-                    <button type="button" class="btn btn-primary myInput" id="joinGroup" onclick="joinGroup()">Join
+                    <button type="button" class="btn btn-primary myInput" id="joinGroup">Join
                         Gruop</button>
                 </div>
             </div>
@@ -51,7 +51,7 @@
                         <p class="chatP">&nbsp : &nbsp Online Users</p>
                         <p class="chatP">&nbsp(4)</p>
                     </div>
-                    <button type="button" class="btn btn-danger" id="logout" onclick="logout()">Logout</button>
+                    <button type="button" class="btn btn-danger" id="logout">Logout</button>
                 </div>
 
                 <div class="msgDiv border text-white text-center mb-3 p-3">
@@ -64,8 +64,8 @@
 
                 <div class="sendDiv text-white text-center">
                     <div class="d-flex flex-row justify-content-between">
-                        <textarea class="form-control m-1" rows="3" placeholder="Enter your message here..." onkeyup="sendMsg()"></textarea>
-                        <button type="button" class="btn btn-success m-1" id="sendMsg" onclick="sendMsg()">Send Message</button>
+                        <textarea class="form-control m-1" rows="3" placeholder="Enter your message here..." id="msgArea"></textarea>
+                        <button type="button" class="btn btn-success m-1" id="sendMsg">Send Message</button>
                     </div>
                     <p>You will logout after 21 sec</p>
                 </div>
