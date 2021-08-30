@@ -16,7 +16,7 @@
 <body class="bg-dark">
 
     <header class="py-1 px-3 bg-dark text-white">
-        <nav class="navbar border-bottom">
+        <nav class="navbar border-bottom fixed-top">
             <div class="col-md-4 d-flex align-items-center">
                 <a href="#" class="mb-3 me-2 mb-md-0 text-muted text-decoration-none lh-1">
                     <img src="img/chat-app-icon-0.jpg" id="logo" width="40px" height="40px">
@@ -55,9 +55,9 @@
                 </div>
 
                 <div class="msgDiv border text-white text-center mb-3 p-3">
-                    <div class="msgBody d-flex flex-row justify-content-start mb-3">
-                        <div class="msgContent border d-flex flex-row p-2 justify-content-between">
-                            <p>User 1 : &nbsp Hello I am Mahmoud Mamdouh </p>
+                    <div class="msgBody d-flex flex-row justify-content-center mb-3">
+                        <div class="msgContent d-flex flex-row p-2 justify-content-center">
+                            <p>No Message yet</p>
                         </div>
                     </div>
                 </div>
@@ -67,7 +67,7 @@
                         <textarea class="form-control m-1" rows="3" placeholder="Enter your message here..." id="msgArea"></textarea>
                         <button type="button" class="btn btn-success m-1" id="sendMsg">Send Message</button>
                     </div>
-                    <p>You will logout after 21 sec</p>
+                    <p id="timer">You will logout after 60 sec</p>
                 </div>
             </div>
         </section>

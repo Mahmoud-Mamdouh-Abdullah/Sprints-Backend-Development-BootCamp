@@ -1,3 +1,6 @@
+body{
+    margin-bottom: 50px;
+}
 #navbarName{
     font-size: 2em;
     font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
@@ -15,19 +18,25 @@
 }
 
 .myInput{
-    width: 30%;
+    width: 40%;
 }
 
 #chatSec{
     margin-top: 100px;
 }
 .chatContainer{
-    width: 50%;
+    width: 70%;
 }
 
 .chatP{
     font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
     font-size: 1.25em;
+}
+
+#msgArea{
+    font-size: 20px;
+    font-weight: bold;
+    font-family: monospace;
 }
 
 .msgDiv{
@@ -43,6 +52,8 @@
 .msgContent {
     width: 60%;
     border-radius: 10px;
+    font-family: monospace;
+    font-size: 18px;
 }
 
 @media (max-width: 767px) {
