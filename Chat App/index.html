@@ -11,6 +11,8 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Fira+Sans:ital,wght@1,900&display=swap');
     </style>
+    <script src="https://js.pusher.com/7.0/pusher.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9-1/crypto-js.js"></script>
 </head>
 
 <body class="bg-dark">
@@ -29,7 +31,7 @@
     <main class="bg-dark">
         <section class="mainContainer" id="loginSec">
             <div class="text-center">
-                <img src="img/chat-app-icon-0.jpg" alt="icon" width="150px" height="150px">
+                <img src="img/chat-app-icon-0.jpg" alt="icon" width="100px" height="100px">
                 <p class="text-white text-center" id="appName">Chat App</p>
                 <div class="d-flex flex-column justify-content-center inputContainer align-items-center">
 
@@ -47,7 +49,7 @@
             <div class="chatContainer border p-2">
                 <div class="d-flex flex-row justify-content-between mb-3">
                     <div class="text-white d-flex flex-row">
-                        <p class="chatP">Group Name</p>
+                        <p class="chatP" id="groupNameP">Group Name</p>
                         <p class="chatP">&nbsp : &nbsp Online Users</p>
                         <p class="chatP">&nbsp(4)</p>
                     </div>

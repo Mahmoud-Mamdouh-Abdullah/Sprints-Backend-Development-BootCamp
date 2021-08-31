@@ -2,23 +2,25 @@ body{
     margin-bottom: 50px;
 }
 #navbarName{
-    font-size: 2em;
+    font-size: 1.5em;
     font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
 }
 
 .mainContainer{
     margin-top: 100px;
-    margin-bottom: 200px;
+    margin-bottom: 150px;
     width: 100%;
 }
 
 #appName{
     font-family: 'Fira Sans', sans-serif ;
-    font-size: 3em;
+    font-size: 2.5em;
 }
 
 .myInput{
-    width: 50%;
+    width: 40%;
+    font-size: 14px;
+    font-family: monospace;
 }
 
 #chatSec{
