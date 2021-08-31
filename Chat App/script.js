@@ -14,11 +14,12 @@ const myName = document.querySelector('#MyName');
 let count = 60;
 let timer;
 
+var pusher = new Pusher('8783cde87284422cc978', {
+    cluster: 'mt1'
+});
+
 const subscribeChannel = function (channelName) {
     Pusher.logToConsole = true;
-    var pusher = new Pusher('8783cde87284422cc978', {
-        cluster: 'mt1'
-    });
 
     var channel = pusher.subscribe(channelName);
     channel.bind('my-event', function (data) {
@@ -42,19 +43,39 @@ const subscribeChannel = function (channelName) {
     });
 }
 
+const checkName = function () {
+    if (myName.value == null || myName.value.length <= 0) return false;
+    return true;
+}
+
+const checkGroupName = function () {
+    if (groupName.value == null || groupName.value.length <= 0) return false;
+    return true;
+}
+
+const checkBeforeJoin = function () {
+    return (checkName() && checkGroupName());
+}
+
+
 const joinGroup = function () {
-    loginSec.classList.add('d-none');
-    chatSec.classList.remove('d-none');
-    groupNameP.innerText = groupName.value;
-    subscribeChannel(groupName.value);
-    timer = setInterval(function () {
-        count--;
-        timerP.innerText = `You will logout after ${count} sec`
-        if (count === 0) {
-            clearInterval(timer);
-            logout();
-        }
-    }, 1000);
+    if (checkBeforeJoin()) {
+        loginSec.classList.add('d-none');
+        chatSec.classList.remove('d-none');
+        groupNameP.innerText = groupName.value;
+        subscribeChannel(groupName.value);
+        timer = setInterval(function () {
+            count--;
+            timerP.innerText = `You will logout after ${count} sec`
+            if (count === 0) {
+                clearInterval(timer);
+                logout();
+            }
+        }, 1000);
+    } else {
+        alert('some Data missing!!');
+    }
+
 }
 
 const logout = function () {
@@ -62,8 +83,8 @@ const logout = function () {
     chatSec.classList.add('d-none');
     count = 60;
     timerP.innerText = `You will logout after 60 sec`;
-    msgDiv.innerHTML = 
-            `
+    msgDiv.innerHTML =
+        `
             <div class="msgBody d-flex flex-row justify-content-center mb-3">
                 <div class="msgContent d-flex flex-row p-2 justify-content-center">
                    <p>No Message yet</p>
@@ -71,8 +92,12 @@ const logout = function () {
             </div>
             `;
     clearInterval(timer);
+    pusher.unsubscribe(groupName.value);
+    groupName.value = '';
+    myName.value = '';
     msgCounter = 0;
 }
+
 
 const getMD5 = function (body) {
     return CryptoJS.MD5(JSON.stringify(body));
