@@ -1,4 +1,6 @@
 let msgCounter = 0;
+let count = 60;
+let timer;
 const loginSec = document.querySelector('#loginSec');
 const chatSec = document.querySelector('#chatSec');
 const msgArea = document.querySelector('#msgArea');
@@ -10,9 +12,26 @@ const timerP = document.querySelector('#timer');
 const groupNameP = document.querySelector('#groupNameP');
 const groupName = document.querySelector('#groupName');
 const myName = document.querySelector('#MyName');
+const online = document.querySelector('#online');
+const myUniqueId = new Date().getUTCMilliseconds();
 
-let count = 60;
-let timer;
+
+const getTimeNow = function () {
+    let today = new Date();
+    let hours = today.getHours();
+    let min = today.getMinutes();
+    let when;
+    if (hours > 12) {
+        when = 'PM';
+        hours -= 12;
+    } else if (hours === 12) {
+        when = 'PM'
+    }
+    else {
+        when = 'AM';
+    }
+    return `${hours}:${min} ${when}`;
+}
 
 var pusher = new Pusher('8783cde87284422cc978', {
     cluster: 'mt1'
@@ -24,22 +43,30 @@ const subscribeChannel = function (channelName) {
     var channel = pusher.subscribe(channelName);
     channel.bind('my-event', function (data) {
         let dataObj = JSON.parse(JSON.stringify(data).replaceAll(`\\`, ''));
-        if (dataObj.sender !== myName.value) {
-            if (msgCounter === 0) {
-                msgDiv.innerHTML = '';
+        if (dataObj.message === 'newJoin') {
+            online.innerText = parseInt(online.innerText) + 1;
+        } else if (dataObj.message === 'logout') {
+            online.innerText = parseInt(online.innerText) - 1;
+        } else {
+            if (parseInt(dataObj.sender) !== myUniqueId) {
+                if (msgCounter === 0) {
+                    msgDiv.innerHTML = '';
+                }
+                let msgBody =
+                    `
+                    <div class="msgBody d-flex flex-row justify-content-start mb-3">
+                        <div class="msgContent border d-flex flex-column p-2 justify-content-between">
+                         <p class="text-white text-start m-0">${dataObj.name} : ${dataObj.message}</p>
+                         <p class="text-end m-0">${getTimeNow()}</p>
+                         </div>
+                    </div>
+                     `;
+                msgDiv.insertAdjacentHTML('beforeend', msgBody);
+                msgDiv.scrollTop = msgDiv.scrollHeight;
+                msgCounter++;
             }
-            let msgBody =
-                `
-                <div class="msgBody d-flex flex-row justify-content-start mb-3">
-                    <div class="msgContent border d-flex flex-row p-2 justify-content-between">
-                     <p class="text-white text-start">${dataObj.sender} : ${dataObj.message}</p>
-                     </div>
-                </div>
-                 `;
-            msgDiv.insertAdjacentHTML('beforeend', msgBody);
-            msgDiv.scrollTop = msgDiv.scrollHeight;
-            msgCounter++;
         }
+
     });
 }
 
@@ -64,6 +91,7 @@ const joinGroup = function () {
         chatSec.classList.remove('d-none');
         groupNameP.innerText = groupName.value;
         subscribeChannel(groupName.value);
+        sendMessageToServer('newJoin');
         timer = setInterval(function () {
             count--;
             timerP.innerText = `You will logout after ${count} sec`
@@ -81,6 +109,7 @@ const joinGroup = function () {
 const logout = function () {
     loginSec.classList.remove('d-none');
     chatSec.classList.add('d-none');
+    sendMessageToServer('logout');
     count = 60;
     timerP.innerText = `You will logout after 60 sec`;
     msgDiv.innerHTML =
@@ -96,10 +125,10 @@ const logout = function () {
     groupName.value = '';
     myName.value = '';
     msgCounter = 0;
+    online.innerText = parseInt(online.innerText) - 1;
 }
 
-
-const getMD5 = function (body) {
+const md5Encryprion = function (body) {
     return CryptoJS.MD5(JSON.stringify(body));
 }
 
@@ -107,10 +136,10 @@ const getAuthSignature = function (md5, timeStamp) {
     return CryptoJS.HmacSHA256(`POST\n/apps/1258676/events\nauth_key=8783cde87284422cc978&auth_timestamp=${timeStamp}&auth_version=1.0&body_md5=${md5}`, "4863e6758db3f3075c2c");
 }
 
-let sendMessageToServer = async function (message, sender) {
-    let body = { data: `{"message":"${message}", "sender":"${sender}"}`, name: "my-event", channel: groupName.value }
+let sendMessageToServer = async function (message) {
+    let body = { data: `{"message":"${message}", "sender":"${myUniqueId}", "name":"${myName.value}"}`, name: "my-event", channel: groupName.value }
     let timeStamp = Date.now() / 1000;
-    let md5 = getMD5(body);
+    let md5 = md5Encryprion(body);
     let url = `https://cors.bridged.cc/https://api-mt1.pusher.com/apps/1258676/events?body_md5=${md5}&auth_version=1.0&auth_key=8783cde87284422cc978&auth_timestamp=${timeStamp}&auth_signature=${getAuthSignature(md5, timeStamp)}`;
     let req = await fetch(url, {
         method: 'POST',
@@ -121,15 +150,16 @@ let sendMessageToServer = async function (message, sender) {
     });
 }
 
-const addMsg = function () {
+const addMsgToDiv = function () {
     if (msgCounter === 0) {
         msgDiv.innerHTML = '';
     }
     let msgBody =
         `
         <div class="msgBody d-flex flex-row justify-content-end mb-3">
-            <div class="msgContent border d-flex flex-row p-2 justify-content-between">
-                <p class="text-white text-start">You : ${msgArea.value}</p>
+            <div class="msgContent border d-flex flex-column p-2 justify-content-between">
+                <p class="text-white text-start m-0">You : ${msgArea.value}</p>
+                <p class="text-end m-0">${getTimeNow()}</p>
             </div>
         </div>
         `;
@@ -140,14 +170,14 @@ const addMsg = function () {
     sendMessageToServer(msgArea.value, myName.value);
 }
 
-const sendMsg = function () {
+const sendingMsgProcess = function () {
     console.log(msgArea.value, msgArea.value.length);
     if (msgArea.value == null || msgArea.value.length === 0) {
         alert('Enter your message first');
         msgArea.value = '';
         return;
     }
-    addMsg();
+    addMsgToDiv();
     msgArea.value = '';
     count = 60;
     timerP.innerText = `You will logout after 60 sec`;
@@ -157,12 +187,12 @@ joinGroupBtn.addEventListener('click', joinGroup);
 
 logoutBtn.addEventListener('click', logout);
 
-sendMsgBtn.addEventListener('click', sendMsg);
+sendMsgBtn.addEventListener('click', sendingMsgProcess);
 
-msgArea.addEventListener('keyup', (e) => {
-    if (e.keyCode === 13) {
-        msgArea.value = msgArea.value.replace(/[\r\n\v]+/g, '');
-        sendMsg();
+msgArea.addEventListener('keydown', (e) => {
+    if (e.altKey  == true && e.keyCode === 13) {
+        msgArea.value = msgArea.value + '\n';
+    } else if (e.keyCode === 13) {
+        sendingMsgProcess();
     }
 });
-
