@@ -30,6 +30,9 @@ const getTimeNow = function () {
     else {
         when = 'AM';
     }
+
+    if (hours < 10) hours = '0' + hours;
+    if (min < 10) min = '0' + min;
     return `${hours}:${min} ${when}`;
 }
 
@@ -42,6 +45,7 @@ const subscribeChannel = function (channelName) {
 
     var channel = pusher.subscribe(channelName);
     channel.bind('my-event', function (data) {
+        console.log(JSON.stringify(data).replaceAll(`\\`, ''));
         let dataObj = JSON.parse(JSON.stringify(data).replaceAll(`\\`, ''));
         if (dataObj.message === 'newJoin') {
             online.innerText = parseInt(online.innerText) + 1;
@@ -56,7 +60,7 @@ const subscribeChannel = function (channelName) {
                     `
                     <div class="msgBody d-flex flex-row justify-content-start mb-3">
                         <div class="msgContent border d-flex flex-column p-2 justify-content-between">
-                         <p class="text-white text-start m-0">${dataObj.name} : ${dataObj.message}</p>
+                         <p class="text-white text-start m-0">${dataObj.name} : ${dataObj.message.replaceAll(/#/g, '<br/>')}</p>
                          <p class="text-end m-0">${getTimeNow()}</p>
                          </div>
                     </div>
@@ -158,7 +162,7 @@ const addMsgToDiv = function () {
         `
         <div class="msgBody d-flex flex-row justify-content-end mb-3">
             <div class="msgContent border d-flex flex-column p-2 justify-content-between">
-                <p class="text-white text-start m-0">You : ${msgArea.value}</p>
+                <p class="text-white text-start m-0">You : ${msgArea.value.replaceAll(/\n/g, '<br/>')}</p>
                 <p class="text-end m-0">${getTimeNow()}</p>
             </div>
         </div>
@@ -167,12 +171,21 @@ const addMsgToDiv = function () {
     msgDiv.scrollTop = msgDiv.scrollHeight;
     msgCounter++;
 
+    msgArea.value = msgArea.value.replaceAll(/\n/g, '#');
     sendMessageToServer(msgArea.value, myName.value);
+}
+
+const checkMessage = function (msg) {
+    msg = msg.replaceAll(/[\r\n\v]+/g, '');
+    if (msg == null || msg.length === 0) {
+        return false;
+    }
+    return true;
 }
 
 const sendingMsgProcess = function () {
     console.log(msgArea.value, msgArea.value.length);
-    if (msgArea.value == null || msgArea.value.length === 0) {
+    if (!checkMessage(msgArea.value)) {
         alert('Enter your message first');
         msgArea.value = '';
         return;
@@ -189,10 +202,13 @@ logoutBtn.addEventListener('click', logout);
 
 sendMsgBtn.addEventListener('click', sendingMsgProcess);
 
-msgArea.addEventListener('keydown', (e) => {
-    if (e.altKey  == true && e.keyCode === 13) {
+msgArea.addEventListener('keyup', (e) => {
+    if (e.altKey == true && e.keyCode === 13) {
+        console.log('alt+enter');
         msgArea.value = msgArea.value + '\n';
     } else if (e.keyCode === 13) {
         sendingMsgProcess();
+        msgArea.value = msgArea.value.replace(/[\r\n\v]+/g, '');
+        console.log('enter');
     }
 });
